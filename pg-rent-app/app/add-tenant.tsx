@@ -1,30 +1,40 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
 import { API_URL } from "../constants/config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AddTenant() {
   const [name, setName] = useState("");
   const [room_number, setRoomNo] = useState("");
   const [rent_status, setRentAmount] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [phone, setPhone] = useState("");
 
   const handleAddTenant = async () => {
-    if (!name || !room_number || !rent_status || !dueDate) {
+    if (!name || !room_number || !rent_status || !phone) {
       Alert.alert("Error", "Please fill all fields");
       return;
     }
 
     try {
+      // Get logged-in user's owner_id
+      const ownerId = await AsyncStorage.getItem("owner_id");
+
+      if (!ownerId) {
+        Alert.alert("Error", "User not logged in");
+        return;
+      }
+
       const response = await fetch(`${API_URL}/tenants`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          owner_id: ownerId,
           name,
+          phone,
           room_number,
           rent_status,
-          
         }),
       });
 
@@ -35,11 +45,12 @@ export default function AddTenant() {
         setName("");
         setRoomNo("");
         setRentAmount("");
-        setDueDate("");
+        setPhone("");
       } else {
         Alert.alert("Error", data.message || "Failed to add tenant");
       }
     } catch (error) {
+      console.error("Add Tenant Error:", error);
       Alert.alert("Error", "Something went wrong");
     }
   };
@@ -68,9 +79,9 @@ export default function AddTenant() {
         style={styles.input}
       />
       <TextInput
-        placeholder="Due Date (YYYY-MM-DD)"
-        value={dueDate}
-        onChangeText={setDueDate}
+        placeholder="Phone"
+        value={phone}
+        onChangeText={setPhone}
         style={styles.input}
       />
 
