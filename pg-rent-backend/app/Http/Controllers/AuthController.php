@@ -36,7 +36,7 @@ class AuthController extends Controller
 
         $token = $owner->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['token' => $token]);
+        return response()->json(['token' => $token,'owner_id' => $owner->id,]);
     }
 
     public function forgotPassword(Request $request) {
