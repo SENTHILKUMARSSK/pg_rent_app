@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native'; // <-- add this
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -13,14 +14,16 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const [isOwnerLogged, setIsOwnerLogged] = useState(false);
 
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      const ownerId = await AsyncStorage.getItem('owner_id');
-      setIsOwnerLogged(!!ownerId); // true if owner_id exists
-    };
-
-    checkLoginStatus();
-  }, []);
+  // ✅ Use focus effect instead of only useEffect
+  useFocusEffect(
+    React.useCallback(() => {
+      const checkLoginStatus = async () => {
+        const ownerId = await AsyncStorage.getItem('owner_id');
+        setIsOwnerLogged(!!ownerId);
+      };
+      checkLoginStatus();
+    }, [])
+  );
 
   return (
     <Tabs
@@ -29,12 +32,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
-          default: {},
-        }),
+        tabBarStyle: Platform.select({ ios: { position: 'absolute' }, default: {} }),
       }}
     >
       <Tabs.Screen
@@ -50,7 +48,8 @@ export default function TabLayout() {
           name="logout"
           options={{
             title: 'Logout',
-            tabBarIcon: ({ color }) => <IconSymbol size={28} name="rectangle.portrait.and.arrow.right" color={color} />,
+            tabBarIcon: ({ color }) =>
+              <IconSymbol size={28} name="rectangle.portrait.and.arrow.right" color={color} />,
           }}
         />
       )}

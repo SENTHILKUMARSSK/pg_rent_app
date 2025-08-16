@@ -64,12 +64,12 @@ export default function Login() {
         <Text style={styles.buttonText}>Create a New Account</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={[styles.button, styles.secondaryButton]}
         onPress={() => router.push('./forgot-password')}
       >
         <Text style={styles.buttonText}>Forgot Password?</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }
