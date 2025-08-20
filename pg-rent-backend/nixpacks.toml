@@ -3,12 +3,18 @@ aptPkgs = [
   "git",
   "unzip",
   "zip",
-  "php-zip"
+  "php-zip",
+  "php-mbstring",
+  "php-xml",
+  "php-bcmath",
+  "php-curl"
 ]
 
 [phases.build]
 cmds = [
-  "composer install --no-dev --optimize-autoloader"
+  "composer install --no-dev --optimize-autoloader",
+  "php artisan key:generate",
+  "php artisan storage:link || true"
 ]
 
 [start]
