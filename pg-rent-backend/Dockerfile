@@ -31,8 +31,8 @@ RUN php artisan config:clear && php artisan route:clear && php artisan cache:cle
 # Generate app key if not set
 RUN php artisan key:generate --force || true
 
-# Expose default port (Railway injects $PORT anyway)
+# Expose port (Railway injects $PORT automatically)
 EXPOSE 8080
 
-# Start Laravel on Railway's dynamic port
-CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=$PORT"]
+# Run PHP's built-in server on /public
+CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-8080} -t public"]
