@@ -25,14 +25,14 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Cache configs
+# Clear and cache configs
 RUN php artisan config:clear && php artisan route:clear && php artisan cache:clear
 
 # Generate app key if not set
 RUN php artisan key:generate --force || true
 
-# Expose port (Railway will map this automatically)
+# Expose default port (Railway injects $PORT anyway)
 EXPOSE 8080
 
-# Start Laravel server
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
+# Start Laravel on Railway's dynamic port
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=$PORT"]
