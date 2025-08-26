@@ -1,5 +1,5 @@
-# Use PHP with FPM (production)
-FROM php:8.2-fpm
+# Use PHP with FPM
+FROM php:8.2-cli
 
 # Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
@@ -18,12 +18,8 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Optimize Laravel
-RUN php artisan config:clear && php artisan route:clear && php artisan cache:clear
-RUN php artisan key:generate --force || true
-
 # Expose Railway’s dynamic port
 EXPOSE 8080
 
-# Run Laravel on Railway’s port (serving public folder)
+# Start Laravel with built-in server (serves from /public)
 CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
