@@ -82,7 +82,7 @@ export default function AddTenant() {
       <TextInput placeholder="Phone" value={phone} onChangeText={setPhone} keyboardType="phone-pad" style={styles.input} />
       <TextInput placeholder="Room No" value={room_number} onChangeText={setRoomNo} style={styles.input} />
       <TextInput placeholder="Rent Amount" value={rent_amount} onChangeText={setRentAmount} keyboardType="numeric" style={styles.input} />
-      <TextInput placeholder="DD-MM-YYYY" value={due_date} onChangeText={setDueDate} style={styles.input} />
+      <TextInput placeholder="YYYY-MM-DD" value={due_date} onChangeText={setDueDate} style={styles.input} />
 
       {/* Rent Status Dropdown */}
       <Picker
